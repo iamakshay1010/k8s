@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+   name: mongodb-config # this name u hv to give while using this values
+type: Opaque #default value here
+data:
+   database_url:  mongodb-service  # copy this name form mongo.yaml service name
+   mongo-root-password:    
+
+
+#1.run this file in cmd then fikle will in inetgarted
+#2.kubectl get secret

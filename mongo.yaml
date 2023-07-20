@@ -1,0 +1,46 @@
+apiVersion: apps/v1  #this is dpeloyment file for mongo
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  lables:
+    app: mongodb
+spec: #specification for deployment 
+  selector:
+    matchLabels:
+      app: mongodb
+  replicas: 4 # tells deployment to run 2 pods matching the template(no of pods we want)
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec: #specifications for pods
+      containers:
+      - name: mongodb
+        image: mongodb
+        ports:
+        - containerPort: 27017 #refer hub.docker.com for mongo ports
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom: 
+             secretKeyRef:
+               name: mongodb-secret
+               key: mongo-root-username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          secretKeyRef:
+               name: mongodb-secret
+               key: mongo-root-username
+
+---
+#ths is service indeployment
+apiVersion: v1  
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb  # make sure this is same as pod bcz we want service to connect to pod(label name)
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+
